@@ -25,7 +25,7 @@ go get github.com/ocaraworks/gorobots
 	fmt.Println(sitemaps)
 
 	//check url dir
-	robotsAllowed, matchData, delaySeconds := CheckPath("http://www.163.com/bbs", "Baiduspider", rules)
+	robotsAllowed, matchData, delaySeconds := CheckPath("http://www.163.com/bbs", "Googlebot", rules)
 
 	if !robotsAllowed {
 		fmt.Println(matchData)

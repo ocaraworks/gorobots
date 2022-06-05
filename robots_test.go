@@ -7,7 +7,10 @@ import (
 )
 
 func Test_robots_parse(t *testing.T) {
+	//get robots content
 	r, _ := http.Get("http://www.163.com/robots.txt")
+
+	//parse robots
 	rules, sitemaps, err := Parse(r.Body)
 
 	if err != nil {
@@ -17,6 +20,7 @@ func Test_robots_parse(t *testing.T) {
 	fmt.Println(rules)
 	fmt.Println(sitemaps)
 
+	//check url dir
 	robotsAllowed, matchData, delaySeconds := CheckPath("http://www.163.com/bbs", "Baiduspider", rules)
 
 	if !robotsAllowed {

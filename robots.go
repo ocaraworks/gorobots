@@ -2,21 +2,17 @@ package main
 
 import (
 	"bufio"
+	"gorobots/helpers"
 	"io"
 	"net/url"
 	"regexp"
-	"robots/helpers"
 	"strings"
 )
 
-type Robots struct {
-}
-
 //Parse 解析
-func (s Robots) Parse(bodyReader io.Reader) (map[string]map[string][]interface{}, []interface{}, error) {
-	var err error
-	var rules = make(map[string]map[string][]interface{}, 0)
-	var sitemaps = make([]interface{}, 0)
+func Parse(bodyReader io.Reader) (rules map[string]map[string][]interface{}, sitemaps []interface{}, err error) {
+	rules = make(map[string]map[string][]interface{}, 0)
+	sitemaps = make([]interface{}, 0)
 
 	b := bufio.NewReader(bodyReader)
 	agentName := ""
@@ -81,11 +77,7 @@ func (s Robots) Parse(bodyReader io.Reader) (map[string]map[string][]interface{}
 }
 
 //CheckPath 检测路径
-func (s Robots) CheckPath(urlPath, spiderName string, authList map[string]map[string][]interface{}) (bool, string, int) {
-	var res bool
-	var matchRes string
-	var delaySeconds int
-
+func CheckPath(urlPath, spiderName string, authList map[string]map[string][]interface{}) (res bool, matchRes string, delaySeconds int) {
 	res = true
 	spiderName = strings.ToLower(spiderName)
 	u, _ := url.Parse(urlPath)
@@ -98,7 +90,7 @@ func (s Robots) CheckPath(urlPath, spiderName string, authList map[string]map[st
 		for k, v := range val {
 			if k == "disallow" {
 				for _, m := range v {
-					if isMatch, matchString := s.MatchAuth(m, urlPath, true); isMatch {
+					if isMatch, matchString := MatchAuth(m, urlPath, true); isMatch {
 						res = false
 						matchRes = matchString
 						break outerDisallow
@@ -112,7 +104,7 @@ func (s Robots) CheckPath(urlPath, spiderName string, authList map[string]map[st
 			for k, v := range val {
 				if k == "allow" {
 					for _, m := range v {
-						if isMatch, matchString := s.MatchAuth(m, urlPath, false); isMatch {
+						if isMatch, matchString := MatchAuth(m, urlPath, false); isMatch {
 							res = true
 							matchRes = matchString
 							break outerAllow
@@ -130,7 +122,7 @@ func (s Robots) CheckPath(urlPath, spiderName string, authList map[string]map[st
 			for k, v := range val {
 				if k == "disallow" {
 					for _, m := range v {
-						if isMatch, matchString := s.MatchAuth(m, urlPath, true); isMatch {
+						if isMatch, matchString := MatchAuth(m, urlPath, true); isMatch {
 							res = false
 							matchRes = matchString
 							break globalDisallow
@@ -146,7 +138,7 @@ func (s Robots) CheckPath(urlPath, spiderName string, authList map[string]map[st
 				for k, v := range val {
 					if k == "allow" {
 						for _, m := range v {
-							if isMatch, matchString := s.MatchAuth(m, urlPath, false); isMatch {
+							if isMatch, matchString := MatchAuth(m, urlPath, false); isMatch {
 								res = true
 								matchRes = matchString
 								break globalAllow
@@ -164,7 +156,7 @@ func (s Robots) CheckPath(urlPath, spiderName string, authList map[string]map[st
 }
 
 //MatchAuth 匹配权限
-func (s Robots) MatchAuth(matchStr interface{}, urlPath string, allowEmpty bool) (bool, string) {
+func MatchAuth(matchStr interface{}, urlPath string, allowEmpty bool) (bool, string) {
 	if matchStr == "/" {
 		return true, ""
 	}

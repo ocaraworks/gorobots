@@ -1,15 +1,15 @@
 # gorobots
 
-#### 介绍 introduction
+#### 介绍 Introduction
 This is a project with golang robots.txt parsing and robots checking for spider.
 
-#### 安装教程 installing
+#### 安装教程 Installing
 
 ```bash
 go get github.com/ocaraworks/gorobots
 ```
 
-#### 使用方式 using method
+#### 使用方式 Using Method
 ```golang
     //get robots content
     r, _ := http.Get("http://www.163.com/robots.txt")

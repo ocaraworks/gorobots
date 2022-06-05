@@ -1,4 +1,4 @@
-# search-robots
+# gorobots
 
 #### 介绍 introduction
 This is a project with golang robots.txt parsing and robots checking for spider.
